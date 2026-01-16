@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌾 IndicAgri Bot - Voice & Text Interface</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #4caf50;
+            --accent-color: #81c784;
+            --bg-color: #f1f8e9;
+            --card-bg: #ffffff;
+            --text-color: #1b5e20;
+            --border-color: #c8e6c9;
+            --shadow: 0 2px 8px rgba(46, 125, 50, 0.1);
+            --voice-recording: #f44336;
+            --voice-processing: #ff9800;
+            --indicagri-orange: #ff6b35;
+            --indicagri-green: #228b22;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #e8f5e8 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(46, 125, 50, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .config-panel, .voice-panel {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .config-panel h3, .voice-panel h3 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .language-selector {
+            background: linear-gradient(135deg, #f8fff8 0%, var(--bg-color) 100%);
+            border: 2px solid var(--accent-color) !important;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .voice-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .record-button {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .record-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(46, 125, 50, 0.4);
+        }
+
+        .record-button.recording {
+            background: linear-gradient(135deg, var(--voice-recording), #d32f2f);
+            animation: pulse 1.5s infinite;
+        }
+
+        .record-button.processing {
+            background: linear-gradient(135deg, var(--voice-processing), #f57c00);
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .transcription-display {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 120px;
+        }
+
+        .transcription-display h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+        }
+
+        .transcribed-text {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+            font-style: italic;
+            min-height: 40px;
+        }
+
+        .query-section {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .query-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+
+        .query-input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .query-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: fit-content;
+        }
+
+        .send-button:hover {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .send-button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .response-section {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .response-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+
+        .pipeline-info {
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e9 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pipeline-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .pipeline-section h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .sub-query-item {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .db-chunk {
+            background: #e8f5e9;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .web-result {
+            background: #fff3e0;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 3px solid var(--voice-processing);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        .response-content {
+            background: linear-gradient(135deg, #f8fff8 0%, #f1f8e9 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            padding: 25px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-ready {
+            background: #e8f5e9;
+            color: var(--primary-color);
+            border: 1px solid var(--accent-color);
+        }
+
+        .status-recording {
+            background: #ffebee;
+            color: var(--voice-recording);
+            border: 1px solid #ffcdd2;
+        }
+
+        .status-processing {
+            background: #fff3e0;
+            color: var(--voice-processing);
+            border: 1px solid #ffcc02;
+        }
+
+        .status-warning {
+            background: #fff8e1;
+            color: #f57c00;
+            border: 1px solid #ffcc02;
+        }
+
+        .status-error {
+            background: #ffebee;
+            color: var(--voice-recording);
+            border: 1px solid #ffcdd2;
+        }
+
+        .voice-settings {
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e9 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .voice-settings h4 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .collapsible {
+            cursor: pointer;
+            padding: 10px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            margin: 5px 0;
+            width: 100%;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .collapsible:hover {
+            background: var(--primary-color);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #f8f9fa;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .collapsible-content.active {
+            max-height: 1000px;
+            padding: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .query-input-group {
+                flex-direction: column;
+            }
+            
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .record-button {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌾 IndicAgri Bot</h1>
+            <div class="subtitle">Advanced Agricultural Assistant with Voice Support</div>
+            <p>Ask questions about farming, crops, soil, pests, and sustainable agriculture in your preferred language</p>
+            <div id="mic-help" style="background: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; margin-top: 10px; border: 1px solid #ffeaa7; display: none;">
+                <strong>📢 Microphone Issues?</strong><br>
+                • Click the 🔒 icon in your browser's address bar<br>
+                • Select "Allow" for microphone permissions<br>
+                • Refresh the page and try again<br>
+                • Or use <strong>http://localhost:5000</strong> instead
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="config-panel">
+                <h3>⚙️ Configuration</h3>
+                <div class="form-group">
+                    <label for="num-agents">Number of Search Agents:</label>
+                    <input type="range" id="num-agents" class="form-control" min="1" max="5" value="2">
+                    <div style="text-align: center; margin-top: 5px;">
+                        <span id="num-agents-value">2</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ollama-port">Ollama Base Port:</label>
+                    <input type="number" id="ollama-port" class="form-control" value="11434" min="1024" max="65535">
+                </div>
+            </div>
+
+            <div class="voice-panel">
+                <h3>🎤 Voice Input</h3>
+                
+                <div class="voice-settings">
+                    <h4>Voice Settings</h4>
+                    <div class="form-group">
+                        <label for="language-select">Select Language:</label>
+                        <select id="language-select" class="form-control language-selector">
+                            {% for code, info in languages.items() %}
+                            <option value="{{ code }}" {% if code == 'hin_Deva' %}selected{% endif %}>
+                                {{ info.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="settings-grid">
+                        <div class="form-group">
+                            <label for="api-key">SarvamAI API Key (Optional):</label>
+                            <input type="password" id="api-key" class="form-control" placeholder="Enter API key for SarvamAI">
+                            <small class="text-muted">
+                                <a href="#" onclick="showApiKeyHelp('sarvam')" style="color: var(--primary-color);">
+                                    ℹ️ How to get SarvamAI API Key?
+                                </a>
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="hf-token">Hugging Face Token (Optional):</label>
+                            <input type="password" id="hf-token" class="form-control" placeholder="Enter HF token">
+                            <small class="text-muted">
+                                <a href="#" onclick="showApiKeyHelp('huggingface')" style="color: var(--primary-color);">
+                                    ℹ️ How to get Hugging Face Token?
+                                </a>
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="use-local-model">
+                        <label for="use-local-model">Use Local Model (experimental - requires setup)</label>
+                        <small class="text-muted" style="display: block; margin-top: 5px;">
+                            ⚠️ Local models currently disabled due to dependency conflicts. SarvamAI recommended.
+                        </small>
+                    </div>
+
+                    <div class="info-box" style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; border-radius: 5px; margin-top: 15px;">
+                        <small style="color: #856404;">
+                            🔒 <strong>Security Note:</strong> API keys are stored locally in your browser and transmitted securely. 
+                            For production use, consider accessing via HTTPS. On localhost, HTTP is acceptable for development.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="voice-controls">
+                    <button id="record-button" class="record-button">
+                        <span id="record-icon">🎤</span>
+                        <span id="record-text">Start Recording</span>
+                    </button>
+                    <div id="recording-status" class="status-indicator status-ready">
+                        <span>🟢</span> Ready to Record
+                    </div>
+                </div>
+
+                <div class="transcription-display">
+                    <h4>📝 Transcription Results</h4>
+                    <div id="original-text" class="transcribed-text">
+                        <strong>Original:</strong> <span id="original-content">No transcription yet</span>
+                    </div>
+                    <div id="translated-text" class="transcribed-text">
+                        <strong>English:</strong> <span id="translated-content">No translation yet</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="query-section">
+            <h3>💬 Ask Your Question</h3>
+            <div class="query-input-group">
+                <textarea id="query-input" class="query-input" placeholder="Type your agricultural question here or use voice input above..."></textarea>
+                <button id="send-button" class="send-button">Send Query</button>
+            </div>
+        </div>
+
+        <div class="response-section">
+            <h3>🌱 IndicAgri Response</h3>
+            
+            <!-- Pipeline Information Section -->
+            <div id="pipeline-info" class="pipeline-info" style="display: none;">
+                <h4 style="color: var(--primary-color); margin-bottom: 15px;">🔍 Search Pipeline Information</h4>
+                
+                <div class="pipeline-section">
+                    <h4>📝 Refined Query</h4>
+                    <div id="refined-query" style="background: #f8f9fa; padding: 10px; border-radius: 8px; font-style: italic;"></div>
+                </div>
+
+                <div class="pipeline-section">
+                    <button class="collapsible" onclick="toggleSection('sub-queries-content')">
+                        🔍 Sub-queries Generated
+                    </button>
+                    <div id="sub-queries-content" class="collapsible-content">
+                        <div id="sub-queries"></div>
+                    </div>
+                </div>
+
+                <div class="pipeline-section">
+                    <button class="collapsible" onclick="toggleSection('db-chunks-content')">
+                        📚 Database Chunks Retrieved
+                    </button>
+                    <div id="db-chunks-content" class="collapsible-content">
+                        <div id="db-chunks"></div>
+                    </div>
+                </div>
+
+                <div class="pipeline-section">
+                    <button class="collapsible" onclick="toggleSection('web-results-content')">
+                        🌐 Web Search Results
+                    </button>
+                    <div id="web-results-content" class="collapsible-content">
+                        <div id="web-results"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="response-content" class="response-content">
+                Welcome to IndicAgri Bot! Ask any agriculture-related question in text or voice.
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

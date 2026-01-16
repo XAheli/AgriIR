@@ -1,0 +1,68 @@
+# Agriculture Embedding Generator Configuration
+
+# Model Configuration
+model:
+  name: "Qwen/Qwen3-Embedding-8B"
+  device: "auto"  # auto, cuda, cpu
+  trust_remote_code: true
+
+# Text Processing Configuration
+text_processing:
+  chunk_size: 256           # Maximum tokens per chunk
+  chunk_overlap: 25         # Overlap between chunks in tokens
+  min_chunk_length: 50      # Minimum characters for a valid chunk
+  
+# FAISS Index Configuration
+index:
+  type: "flat"              # flat (exact) or ivf (approximate)
+  similarity_metric: "cosine"
+  normalize_vectors: true
+
+# Processing Configuration
+processing:
+  batch_size: 32            # Batch size for embedding generation
+  max_records: null         # null for all records, or set a number
+  show_progress: true       # Show progress bars
+  
+# Output Configuration
+output:
+  save_embeddings: true     # Save embeddings.npy
+  save_metadata_json: true  # Save metadata.json (human readable)
+  save_metadata_pkl: true   # Save metadata.pkl (faster loading)
+  save_faiss_index: true    # Save FAISS index
+  save_config: true         # Save generation config
+  save_stats: true          # Save summary statistics
+  
+# Logging Configuration
+logging:
+  level: "INFO"             # DEBUG, INFO, WARNING, ERROR
+  log_to_file: true
+  log_file: "embedding_generation.log"
+  
+# Agricultural Metadata Configuration
+metadata:
+  preserve_all_fields: true
+  required_fields:
+    - "title"
+    - "text_extracted"
+  agricultural_fields:
+    - "crop_types"
+    - "farming_methods"
+    - "soil_types"
+    - "climate_info"
+    - "fertilizers"
+    - "indian_regions"
+    - "plant_species"
+    
+# Quality Control
+quality:
+  skip_empty_text: true
+  skip_short_chunks: true
+  validate_embeddings: true
+  check_duplicates: false   # Enable duplicate detection (slower)
+  
+# Performance Optimization
+performance:
+  use_gpu_if_available: true
+  optimize_memory: true
+  clear_cache_between_batches: false

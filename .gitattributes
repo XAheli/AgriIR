@@ -1,0 +1,2 @@
+*.tar.xz filter=lfs diff=lfs merge=lfs -text
+autonomous_indian_agriculture_complete_repaired.jsonl.tar.xz filter=lfs diff=lfs merge=lfs -text

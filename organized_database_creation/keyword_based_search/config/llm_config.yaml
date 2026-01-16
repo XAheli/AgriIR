@@ -1,0 +1,46 @@
+# LLM Configuration for Agriculture Data Curator
+# This file allows you to configure which LLM model to use
+
+# Model Configuration
+model:
+  # Primary model for data extraction and curation
+  name: "gemma3:27b"  # Options: deepseek-r1:70b, gemma3:27b, llama3:70b, qwen2.5:72b
+  
+  # Alternative models (uncomment to use)
+  # name: "gemma3:27b"
+  # name: "llama3:70b"
+  # name: "qwen2.5:72b"
+  # name: "mistral:latest"
+  
+  # Model parameters
+  temperature: 0.7
+  top_p: 0.9
+  max_tokens: 2000
+
+# Agent Configuration
+agents:
+  num_agents: 4  # Number of parallel agents
+  enable_intelligent_expansion: true  # Use LLM to generate additional search queries
+  enable_pdf_download: true  # Download and process PDFs
+  
+# Search Configuration  
+search:
+  max_search_results: 25  # Results per query
+  num_queries: null  # null = use all queries, or specify number (e.g., 20 for testing)
+  
+# Output Configuration
+output:
+  output_file: "indian_agriculture_data_complete.jsonl"
+  pdf_storage_dir: "downloaded_pdfs"
+  
+# Ollama Server Configuration
+ollama:
+  base_url: "http://localhost:11434"
+  port_start: 11434
+  
+# Advanced Features
+features:
+  duplicate_prevention: true
+  pdf_ocr: true  # Use OCR for scanned PDFs
+  metadata_extraction: true
+  structured_fields: true  # Extract soil, climate, fertilizer info

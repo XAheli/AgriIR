@@ -1,0 +1,57 @@
+# Enhanced RAG System Configuration
+
+# Paths
+embeddings_dir: "/store/Answering_Agriculture/agriculture_embeddings"
+temp_dir: "/tmp"
+
+# Ollama Configuration
+ollama:
+  host: "http://localhost:11434"
+  query_refinement_model: "gemma3:1b"
+  sub_query_generation_model: "gemma3:1b"
+  synthesis_model: "gemma3:27b"
+  fallback_synthesis_model: "gemma3:1b"
+
+# Embedding Model Configuration
+embeddings:
+  model_name: "Qwen/Qwen3-Embedding-8B"
+  # Alternative models:
+  # model_name: "all-MiniLM-L6-v2"
+  # model_name: "sentence-transformers/all-mpnet-base-v2"
+
+# Default Query Processing Parameters
+query_processing:
+  default_num_sub_queries: 3
+  default_db_chunks_per_query: 3
+  default_web_results_per_query: 3
+  max_sub_queries: 5
+  max_db_chunks_per_query: 10
+  max_web_results_per_query: 10
+
+# Generation Parameters
+generation:
+  query_refinement:
+    temperature: 0.1
+    top_p: 0.9
+    num_ctx: 2048
+  
+  sub_query_generation:
+    temperature: 0.3
+    top_p: 0.9
+    num_ctx: 2048
+  
+  answer_synthesis:
+    temperature: 0.1
+    top_p: 0.9
+    num_ctx: 8192
+
+# Web UI Configuration
+web_ui:
+  host: "0.0.0.0"
+  port: 5000
+  debug: false
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

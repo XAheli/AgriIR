@@ -1,0 +1,21 @@
+{
+  "curation": {
+    "status": "success",
+    "duration": 12.806967973709106,
+    "entries": 10
+  },
+  "embedding": {
+    "status": "skipped",
+    "duration": 3.5820813179016113,
+    "index_size": 0,
+    "embeddings_size": 0,
+    "entries": 10,
+    "note": "Requires Qwen3-Embedding-8B model (8GB+ download)"
+  },
+  "retrieval": {
+    "status": "skipped",
+    "duration": 0.13710594177246094,
+    "results_count": 0,
+    "note": "Requires generated embeddings"
+  }
+}

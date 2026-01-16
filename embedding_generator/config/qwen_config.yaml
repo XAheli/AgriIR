@@ -1,0 +1,44 @@
+# Qwen3-Embedding-8B Specific Configuration
+# This matches the original configuration used to generate agriculture_embeddings
+
+# Model Configuration (Original Setup)
+model:
+  name: "Qwen/Qwen3-Embedding-8B"
+  device: "auto"
+  trust_remote_code: true
+  embedding_dimension: 4096
+
+# Text Processing (Original Settings)
+text_processing:
+  chunk_size: 256
+  chunk_overlap: 25
+  min_chunk_length: 50
+
+# Index Configuration
+index:
+  type: "flat"
+  similarity_metric: "cosine"
+  normalize_vectors: true
+
+# Processing Settings
+processing:
+  batch_size: 1             # Conservative for 8B model
+  max_records: null
+  show_progress: true
+
+# Output Settings
+output:
+  default_output_dir: "agriculture_embeddings"
+  save_all: true
+
+# Performance Settings
+performance:
+  use_gpu_if_available: true
+  optimize_memory: true
+  eval_mode: true           # Set model to eval mode
+
+# Original Dataset Settings
+dataset:
+  expected_records: 100     # Based on original agriculture dataset
+  expected_chunks: 7037     # Based on original output
+  input_file: "autonomous_indian_agriculture_complete.jsonl"

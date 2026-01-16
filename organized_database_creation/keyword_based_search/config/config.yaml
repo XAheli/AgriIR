@@ -1,0 +1,94 @@
+# Agriculture Data Curator Configuration
+curator:
+  # Model configuration - use one of these models
+  model: "deepseek-r1:70b"  # Primary choice for better reasoning
+  # model: "gemma3:27b"     # Alternative choice
+  
+  # Agent configuration
+  num_agents: 20              # Number of parallel agents
+  max_search_results: 40     # Results per search query (increased)
+  
+  # Output configuration
+  output_file: "indian_agriculture_data.jsonl"
+  log_file: "agriculture_curator.log"
+  pdf_storage_dir: "downloaded_pdfs"
+  
+  # Search configuration
+  search_timeout: 15         # Timeout for web requests (increased)
+  query_delay: 1.1            # Delay between searches (seconds)
+  
+  # Content extraction - NO LIMITS for complete dataset
+  max_content_length: null   # No limit - extract full content
+  min_relevance_score: 0.05  # Lower threshold for more comprehensive data
+  
+  # PDF processing
+  pdf_download: true         # Enable PDF downloading
+  pdf_max_size_mb: 500        # Maximum PDF size to download (50MB)
+  ocr_enabled: true          # Enable OCR for scanned PDFs
+  
+  # Processing limits
+  max_queries: null          # null for all queries, or set a number for testing
+  
+  # Duplicate prevention
+  duplicate_check: true      # Enable comprehensive duplicate checking
+  url_deduplication: true    # Check for duplicate URLs
+  content_similarity_threshold: 0.85  # Similarity threshold for content deduplication
+  
+# Search Query Categories
+search_categories:
+  crops:
+    - "rice"
+    - "wheat" 
+    - "cotton"
+    - "sugarcane"
+    - "pulses"
+    - "millets"
+    - "spices"
+    - "fruits"
+    - "vegetables"
+    
+  regions:
+    - "Punjab"
+    - "Maharashtra"
+    - "Tamil Nadu"
+    - "Karnataka"
+    - "Uttar Pradesh"
+    - "West Bengal"
+    - "Gujarat"
+    - "Rajasthan"
+    - "Kerala"
+    - "Andhra Pradesh"
+    
+  methods:
+    - "organic farming"
+    - "precision agriculture"
+    - "sustainable farming"
+    - "irrigation"
+    - "crop rotation"
+    - "pest management"
+    - "soil health"
+    - "climate adaptation"
+    
+  economics:
+    - "agricultural economics"
+    - "crop insurance"
+    - "subsidies"
+    - "mechanization"
+    - "marketing"
+    - "food security"
+
+# Priority domains for higher relevance scoring
+priority_domains:
+  - "icar.org.in"
+  - "iari.res.in"
+  - "icrisat.org"
+  - "agricoop.nic.in"
+  - "indiastat.com"
+  - "mospi.gov.in"
+  - "niti.gov.in"
+  - "fao.org"
+  - "worldbank.org"
+  - "researchgate.net"
+  - "springer.com"
+  - "sciencedirect.com"
+  - "jstor.org"

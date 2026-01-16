@@ -1,0 +1,132 @@
+# Autonomous Agriculture Data Curator Configuration
+autonomous_curator:
+  # Agent configuration
+  num_agents: 12                    # Number of autonomous agents
+  searches_per_agent: 75            # Autonomous searches per agent
+  max_search_results: 30            # Results per search query
+  
+  # Output configuration
+  output_file: "autonomous_indian_agriculture_mega.jsonl"
+  log_file: "autonomous_agriculture_curator.log"
+  pdf_storage_dir: "autonomous_agriculture_pdfs"
+  
+  # Search configuration
+  search_timeout: 20                # Timeout for web requests
+  agent_delay: 1.5                  # Delay between agent searches (seconds)
+  max_concurrent_agents: 6          # Limit concurrent agents for stability
+  
+  # Content extraction - NO LIMITS for complete dataset
+  max_content_length: null          # No limit - extract full content
+  min_relevance_score: 0.03         # Lower threshold for comprehensive data
+  
+  # PDF processing
+  pdf_download: true                # Enable PDF downloading
+  pdf_max_size_mb: 100              # Maximum PDF size to download
+  ocr_enabled: true                 # Enable OCR for scanned PDFs
+  
+  # Autonomous search configuration
+  enable_autonomous_generation: true # Enable agents to generate their own queries
+  query_uniqueness_check: true      # Prevent duplicate queries
+  url_deduplication: true           # Check for duplicate URLs
+  progressive_search: true          # Agents learn from previous searches
+  
+  # Agent specializations (automatically assigned)
+  specializations:
+    - "Crop Science & Plant Breeding"
+    - "Soil Science & Fertility Management"
+    - "Water Resources & Irrigation" 
+    - "Plant Protection & Pest Management"
+    - "Agricultural Technology & Precision Farming"
+    - "Sustainable & Organic Farming"
+    - "Agricultural Economics & Policy"
+    - "Climate Change & Adaptation"
+    - "Horticulture & Plantation Crops"
+    - "Livestock & Animal Husbandry"
+    - "Food Processing & Post-Harvest"
+    - "Rural Development & Extension"
+    - "Agricultural Research & Innovation"
+    - "Traditional Knowledge & Indigenous Practices"
+    - "Agricultural Biotechnology & Genetics"
+
+# Knowledge base for autonomous search generation
+knowledge_domains:
+  # Major crop categories
+  crops:
+    cereals: ["rice", "wheat", "maize", "barley", "millets", "sorghum", "bajra", "jowar", "ragi"]
+    pulses: ["lentils", "chickpeas", "pigeon peas", "black gram", "green gram", "kidney beans"]
+    cash_crops: ["cotton", "sugarcane", "tobacco", "jute"]
+    oilseeds: ["groundnut", "mustard", "sesame", "sunflower", "safflower", "coconut"]
+    spices: ["turmeric", "coriander", "cumin", "cardamom", "pepper", "cinnamon", "ginger"]
+    fruits: ["mango", "banana", "apple", "grapes", "orange", "pomegranate", "guava", "citrus"]
+    vegetables: ["potato", "onion", "tomato", "brinjal", "okra", "cabbage", "cauliflower"]
+    plantation: ["tea", "coffee", "rubber", "arecanut", "cocoa"]
+
+  # Agricultural sciences
+  sciences:
+    soil: ["fertility", "health", "organic matter", "pH", "nutrients", "erosion", "conservation"]
+    plant: ["breeding", "genetics", "pathology", "physiology", "nutrition", "biotechnology"]
+    water: ["irrigation", "management", "conservation", "quality", "harvesting", "efficiency"]
+    climate: ["adaptation", "change", "resilience", "weather", "monsoon", "drought"]
+    pest: ["management", "control", "resistance", "biological control", "IPM", "pesticides"]
+
+  # Indian geographical contexts
+  regions:
+    states: ["Punjab", "Haryana", "UP", "Bihar", "Bengal", "Maharashtra", "Gujarat", "Rajasthan", 
+             "Karnataka", "Tamil Nadu", "Kerala", "Andhra Pradesh", "Odisha", "MP", "Assam"]
+    zones: ["Indo-Gangetic Plains", "Deccan Plateau", "Western Ghats", "Eastern Ghats", 
+            "Coastal Plains", "Hill Regions", "Desert Regions", "Island Territories"]
+    agro_climatic: ["Humid", "Semi-arid", "Arid", "Coastal", "Hill", "Plateau", "Plains"]
+
+  # Technology and innovation
+  technology:
+    precision: ["GPS", "sensors", "drones", "satellite", "IoT", "AI", "machine learning"]
+    traditional: ["indigenous knowledge", "traditional varieties", "folk practices"]
+    modern: ["biotechnology", "tissue culture", "hydroponics", "greenhouse", "automation"]
+
+# Search query patterns for autonomous generation
+search_patterns:
+  research_focused: [
+    "{crop} {science_term} research India",
+    "{technology} {crop} development {region}",
+    "{science_term} {crop} improvement India"
+  ]
+  
+  location_specific: [
+    "{crop} cultivation {state} agriculture",
+    "{science_term} {region} farming practices",
+    "traditional {crop} varieties {state}"
+  ]
+  
+  problem_solution: [
+    "{crop} {problem} management India",
+    "{science_term} {challenge} solutions {region}",
+    "sustainable {crop} {technology} India"
+  ]
+  
+  policy_economics: [
+    "{crop} price policy India government",
+    "agricultural {economics_term} {state} farmers",
+    "{crop} subsidy scheme India"
+  ]
+
+# Priority domains for enhanced relevance scoring
+priority_domains:
+  government: ["icar.org.in", "iari.res.in", "agricoop.nic.in", "gov.in"]
+  research: ["icrisat.org", "irri.org", "cimmyt.org", "researchgate.net"]
+  academic: ["springer.com", "sciencedirect.com", "jstor.org", "ieee.org"]
+  international: ["fao.org", "worldbank.org", "ifpri.org", "cgiar.org"]
+  indian_institutions: ["iari.res.in", "tnau.ac.in", "pau.edu", "gbpuat.ac.in"]
+
+# Content quality filters
+quality_filters:
+  minimum_content_length: 100       # Minimum characters for content
+  exclude_domains: ["spam.com", "ads.com"]
+  required_keywords: ["agriculture", "farming", "crop", "plant", "soil", "india"]
+  language_detection: true          # Prefer English and Hindi content
+  
+# Monitoring and reporting
+monitoring:
+  progress_reporting_interval: 10   # Report progress every N searches
+  performance_metrics: true        # Track agent performance
+  content_analysis: true           # Analyze collected content quality
+  duplicate_detection: true        # Monitor and report duplicates

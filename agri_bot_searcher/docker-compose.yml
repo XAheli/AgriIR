@@ -1,0 +1,87 @@
+services:
+  agri-bot-searcher:
+    build: .
+    container_name: agri-bot-searcher
+    restart: unless-stopped
+    ports:
+      - "5000:5000"  # Web UI
+      - "8000:8000"  # Alternative port
+    environment:
+      - OLLAMA_HOST=ollama-server:11434
+      - PYTHONPATH=/app/src
+      - HOST=0.0.0.0
+      - PORT=5000
+      - DEBUG=false
+    volumes:
+      - ./data:/app/data  # For persistent data
+      - ./logs:/app/logs  # For log files
+      - ./config.yml:/app/config.yml:ro  # Configuration
+    networks:
+      - agri-bot-network
+    depends_on:
+      - ollama
+    command: python src/web_ui.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Ollama service (optional - if you want to run Ollama in Docker too)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-server
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+      - "11435:11435"
+      - "11436:11436"
+    volumes:
+      - ollama-data:/root/.ollama
+      - ./models:/app/models
+    environment:
+      - OLLAMA_ORIGINS=*
+    networks:
+      - agri-bot-network
+
+  # Web interface (optional - for future development)
+  web-interface:
+    build: .
+    container_name: agri-bot-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - API_URL=http://agri-bot-searcher:8000
+    networks:
+      - agri-bot-network
+    depends_on:
+      - agri-bot-searcher
+    profiles:
+      - web  # Only start with: docker-compose --profile web up
+
+volumes:
+  ollama-data:
+    driver: local
+  
+networks:
+  agri-bot-network:
+    driver: bridge
+
+# Example usage commands:
+#
+# Start the basic service:
+#   docker-compose up -d
+#
+# Start with web interface:
+#   docker-compose --profile web up -d
+#
+# Run a query:
+#   docker exec -it agri-bot-searcher python src/agriculture_chatbot.py --query "How to grow tomatoes?" --exact
+#
+# Interactive mode:
+#   docker exec -it agri-bot-searcher python tests/test_agriculture_chatbot.py --interactive
+#
+# View logs:
+#   docker-compose logs -f agri-bot-searcher
