@@ -7,21 +7,15 @@
 [![Paper](https://img.shields.io/badge/ECIR%202026-IR%20for%20Good-blue?style=for-the-badge&logo=springer)](https://ecir2026.eu/calls/call-for-ir-for-good-papers)
 [![Demo](https://img.shields.io/badge/Demo-Watch%20Video-red?style=for-the-badge&logo=youtube)](https://bit.ly/AgriIR)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.8--3.12-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.10--3.12-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 
 [![Ollama](https://img.shields.io/badge/Ollama-Supported-black?style=flat-square&logo=ollama)](https://ollama.ai)
 [![FAISS](https://img.shields.io/badge/FAISS-Vector%20DB-orange?style=flat-square&logo=meta)](https://github.com/facebookresearch/faiss)
-[![Flask](https://img.shields.io/badge/Flask-Web%20UI-lightgrey?style=flat-square&logo=flask)](https://flask.palletsprojects.com)
-[![HuggingFace](https://img.shields.io/badge/HuggingFace-Models-yellow?style=flat-square&logo=huggingface)](https://huggingface.co)
 
 <br/>
 
-**AgriIR** is a modular RAG framework that achieves **ChatGPT-4o level performance** using **27B parameter models** while providing **deterministic citations** — designed for agricultural information access in resource-constrained environments.
+**AgriIR** is a modular RAG framework that achieves **ChatGPT-4o level performance** using **27B parameter models** while providing **deterministic citations** — designed for agricultural information access in resource constrained environments.
 
-[Getting Started](#-quick-start) •
-[Documentation](#-documentation) •
-[Benchmarks](#-benchmark-results) •
-[Contributing](#-contributing)
 
 </div>
 
@@ -42,8 +36,8 @@
 ## Quick Start
 
 ```bash
-git clone https://github.com/Shuvam-Banerji-Seal/AgriIR-A-Scalable-Framework-for-Domain-Specific-Knowledge-Retrieval.git
-cd AgriIR-A-Scalable-Framework-for-Domain-Specific-Knowledge-Retrieval
+git clone https://github.com/Shuvam-Banerji-Seal/AgriIR.git
+cd AgriIR
 chmod +x install_agriir.sh && ./install_agriir.sh
 ./start_agriir.sh
 ```
@@ -89,7 +83,7 @@ Evaluated on **191 queries** by **30 annotators**. Composite = 0.7×(Answer/4) +
 
 | Requirement | Minimum | Recommended |
 |:--|:--|:--|
-| Python | 3.8 | 3.11+ |
+| Python | 3.10 | 3.11+ |
 | RAM | 8 GB | 32 GB |
 | GPU | Optional | 8GB+ VRAM |
 
@@ -153,37 +147,7 @@ AgriIR/
 
 ---
 
-## Citation
-
-```bibtex
-@inproceedings{seal2026agriir,
-  title     = {AgriIR: A Scalable Framework for Domain-Specific Knowledge Retrieval},
-  author    = {Seal, Shuvam Banerji and Poddar, Aheli and Mishra, Alok and Roy, Dwaipayan},
-  booktitle = {ECIR 2026, IR for Good Track},
-  year      = {2026},
-  publisher = {Springer},
-  series    = {LNCS}
-}
-```
-
----
-
 ## Authors
 
 **Shuvam Banerji Seal** (IISER Kolkata) • **Aheli Poddar** (IEM Kolkata) • **Alok Mishra** (IISER Kolkata) • **Dwaipayan Roy** (IISER Kolkata)
 
----
-
-## License
-
-MIT License — see [LICENSE](LICENSE)
-
-**Acknowledgments:** [Ollama](https://ollama.ai) • [FAISS](https://github.com/facebookresearch/faiss) • [Qwen](https://github.com/QwenLM/Qwen) • [AI4Bharat](https://ai4bharat.iitm.ac.in) • [ICAR](https://icar.org.in) • [FAO](https://www.fao.org)
-
----
-
-<div align="center">
-
-**[Demo](https://bit.ly/AgriIR)** • **[Issues](https://github.com/Shuvam-Banerji-Seal/AgriIR-A-Scalable-Framework-for-Domain-Specific-Knowledge-Retrieval/issues)**
-
-</div>
