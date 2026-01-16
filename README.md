@@ -1,153 +1,245 @@
-<div align="center">
-
-# AgriIR
-
-### A Scalable Framework for Domain-Specific Knowledge Retrieval
-
-[![Paper](https://img.shields.io/badge/ECIR%202026-IR%20for%20Good-blue?style=for-the-badge&logo=springer)](https://ecir2026.eu/calls/call-for-ir-for-good-papers)
-[![Demo](https://img.shields.io/badge/Demo-Watch%20Video-red?style=for-the-badge&logo=youtube)](https://bit.ly/AgriIR)
-[![License](https://img.shields.io/badge/License-Apache2.0-green?style=for-the-badge)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-
-[![Ollama](https://img.shields.io/badge/Ollama-Supported-black?style=flat-square&logo=ollama)](https://ollama.ai)
-[![FAISS](https://img.shields.io/badge/FAISS-Vector%20DB-orange?style=flat-square&logo=meta)](https://github.com/facebookresearch/faiss)
+<p align="center">
+  <h1 align="center">🌾 AgriIR</h1>
+  <p align="center">
+    <strong>Configurable RAG Framework for Domain-Specific Knowledge Retrieval</strong>
+  </p>
+  <p align="center">
+    <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.10+-3776ab.svg" alt="Python"></a>
+    <a href="https://ollama.ai"><img src="https://img.shields.io/badge/LLM-Ollama-white.svg" alt="Ollama"></a>
+    <a href="https://github.com/facebookresearch/faiss"><img src="https://img.shields.io/badge/vector--db-FAISS-orange.svg" alt="FAISS"></a>
+  </p>
+  <p align="center">
+    <a href="https://ecir2026.eu/calls/call-for-ir-for-good-papers"><img src="https://img.shields.io/badge/ECIR%202026-IR%20for%20Good%20✓-brightgreen.svg" alt="ECIR 2026"></a>
+    <a href="https://bit.ly/AgriIR"><img src="https://img.shields.io/badge/Demo-Video-red.svg" alt="Demo"></a>
+  </p>
+</p>
 
 <br/>
 
-**AgriIR** is a modular RAG framework that achieves **ChatGPT-4o level performance** using **27B parameter models** while providing **deterministic citations** — designed for agricultural information access in resource constrained environments.
+> **🏅 Accepted at [ECIR'26 IR for Good Track](https://ecir2026.eu/calls/call-for-ir-for-good-papers)** · [Watch Demo](https://bit.ly/AgriIR)
 
+<br/>
 
-</div>
+## What is AgriIR?
 
----
+AgriIR is a 6-stage retrieval-augmented generation pipeline for agricultural Q&A. It combines local vector search (FAISS) with web retrieval, applies domain-specific agents, and inserts deterministic citations into responses.
 
-## Highlights
+<br/>
 
-| Feature | Description |
-|:--------|:------------|
-| **Statistical Parity with GPT-4o** | Composite score 0.820 vs 0.840 (p=0.493, not significant) |
-| **73% Perfect Citations** | Deterministic citation system vs 0% for baseline LLMs |
-| **6-Stage Pipeline** | Modular architecture with temperature stratification |
-| **Indian Language Support** | Hindi, Tamil, Telugu, Kannada, Malayalam voice I/O |
-| **Low Resource Friendly** | Runs on 8GB RAM with Gemma3:1B |
+## Pipeline
 
----
+```mermaid
+graph LR
+    A[Query] --> B[Refine]
+    B --> C[Decompose]
+    C --> D[Retrieve]
+    D --> E[Enhance]
+    E --> F[Synthesize]
+    F --> G[Cite]
+    G --> H[Response]
+
+    subgraph "Temperature"
+        B -.-> B1["T=0.1"]
+        C -.-> C1["T=0.5"]
+        F -.-> F1["T=0.2"]
+    end
+```
+
+| Stage | Operation | Details |
+|:-----:|:----------|:--------|
+| 1 | Query Refinement | Remove ambiguity (Gemma3:1B) |
+| 2 | Decomposition | Split into 3-5 sub-queries |
+| 3 | Retrieval | FAISS + DuckDuckGo in parallel |
+| 4 | Enhancement | Domain agent keyword injection |
+| 5 | Synthesis | Generate answer (configurable model) |
+| 6 | Citation | Insert sources where similarity ≥ 0.75 |
+
+<br/>
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/Shuvam-Banerji-Seal/AgriIR.git
-cd AgriIR
-chmod +x install_agriir.sh && ./install_agriir.sh
+git clone https://github.com/Shuvam-Banerji-Seal/AgriIR.git && cd AgriIR
+./install_agriir.sh
 ./start_agriir.sh
-```
-Open **http://localhost:5000**
-
----
-
-## Architecture
-
-```
-USER QUERY
-    ▼
-┌────────────────────────────────────────────────────────────────────┐
-│ Stage 1: Query Refinement (T=0.1)        → Gemma3:1B               │
-│ Stage 2: Sub-Query Decomposition (T=0.5) → 3-5 sub-queries         │
-│ Stage 3: Parallel Retrieval              → FAISS + DuckDuckGo      │
-│ Stage 4: Domain-Agent Enhancement        → Specialist selection    │
-│ Stage 5: Answer Synthesis (T=0.2)        → Gemma3:27B              │
-│ Stage 6: Citation Insertion              → Similarity > 0.75       │
-└────────────────────────────────────────────────────────────────────┘
-    ▼
-CITED RESPONSE
+# Open http://localhost:5000
 ```
 
----
+<br/>
 
-## Benchmark Results
+## System Architecture
 
-Evaluated on **191 queries** by **30 annotators**. Composite = 0.7×(Answer/4) + 0.3×(Citation/2)
+```mermaid
+graph TB
+    subgraph Client
+        WEB[Web UI]
+        VOICE[Voice Input]
+    end
 
-| Model | Answer | Good% | Citations | Composite |
-|:------|:------:|:-----:|:---------:|:---------:|
-| ChatGPT-4o | 3.36 | 88.5% | — | **0.840** |
-| **AgriIR (Gemma3:27B)** | 3.24 | 86.9% | 73.0% | **0.820** |
-| Gemini 2.5 Flash | 3.12 | 78.7% | — | 0.779 |
-| GPT-OSS-120B | 2.82 | 70.5% | — | 0.705 |
+    subgraph Server["Flask Server :5000"]
+        API[REST API]
+        RAG[RAG Engine]
+        CIT[Citation Tracker]
+    end
 
-**Statistical parity with ChatGPT-4o** (p=0.493) while providing **73% perfect citations** vs 0% for baselines.
+    subgraph Inference["Ollama :11434"]
+        LLM[LLM Models]
+        EMB[Embeddings]
+    end
 
----
+    subgraph Storage
+        FAISS[(FAISS Index)]
+        DDG[Web Search]
+    end
+
+    WEB --> API
+    VOICE --> API
+    API --> RAG
+    RAG --> LLM
+    RAG --> EMB
+    RAG --> FAISS
+    RAG --> DDG
+    RAG --> CIT
+```
+
+<br/>
 
 ## Installation
 
-| Requirement | Minimum | Recommended |
-|:--|:--|:--|
-| Python | 3.10 | 3.11+ |
-| RAM | 8 GB | 32 GB |
-| GPU | Optional | 8GB+ VRAM |
+### Requirements
 
-```bash
-./install_agriir.sh                      # Automated setup
-./install_agriir.sh --download-embeddings # With pre-built embeddings (~40GB)
-./install_agriir.sh --no-rag              # Web-search only mode
-```
+| | Minimum | Recommended |
+|:--|:-------:|:-----------:|
+| **Python** | 3.10 | 3.11+ |
+| **RAM** | 8 GB | 32 GB |
+| **GPU** | — | 8GB+ VRAM |
+
+
+### Options
 
 <details>
-<summary><b>Manual Installation</b></summary>
+<summary><strong>Standard Installation</strong></summary>
+
+```bash
+./install_agriir.sh
+```
+</details>
+
+<details>
+<summary><strong>With Pre-built Embeddings (~40GB)</strong></summary>
+
+```bash
+./install_agriir.sh --download-embeddings
+```
+</details>
+
+<details>
+<summary><strong>Web Search Only (No Local DB)</strong></summary>
+
+```bash
+./install_agriir.sh --no-rag
+```
+</details>
+
+<details>
+<summary><strong>Manual Setup</strong></summary>
 
 ```bash
 python3 -m venv agriir_env && source agriir_env/bin/activate
 pip install -r requirements.txt
 curl -fsSL https://ollama.ai/install.sh | sh
-ollama pull gemma3:1b llama3.2:3b
+ollama pull gemma3:1b && ollama pull llama3.2:3b
 ```
 </details>
 
----
+### Models
+
+| Model | VRAM | Role |
+|:------|:----:|:-----|
+| `gemma3:1b` | 1.6 GB | Query refinement |
+| `llama3.2:3b` | 2 GB | Default synthesis |
+| `gemma3:27b` | 16 GB | High-quality synthesis |
+| `Qwen3-Embedding-8B` | 5 GB | Embeddings |
+
+<br/>
 
 ## Usage
 
-```bash
-./start_agriir.sh                                    # Auto-select mode
-python3 agri_bot_searcher/src/enhanced_web_ui.py     # RAG mode
-python3 agri_bot_searcher/src/enhanced_voice_web_ui.py # Voice mode
-```
+### Server Modes
 
-**API:**
+| Command | Mode |
+|:--------|:-----|
+| `./start_agriir.sh` | Auto-detect |
+| `python3 agri_bot_searcher/src/enhanced_web_ui.py` | Full RAG |
+| `python3 agri_bot_searcher/src/enhanced_voice_web_ui.py` | Voice enabled |
+| `python3 agri_bot_searcher/src/fallback_web_ui.py` | Web search only |
+
+### API
+
 ```python
-requests.post('http://localhost:5000/api/query', json={'query': 'Best wheat practices in Punjab?'})
+import requests
+
+r = requests.post('http://localhost:5000/api/query',
+                  json={'query': 'Wheat cultivation in Punjab'})
+print(r.json())
 ```
 
----
+| Endpoint | Method | Description |
+|:---------|:------:|:------------|
+| `/api/query` | POST | Submit query |
+| `/api/status` | GET | System status |
+| `/api/health` | GET | Health check |
 
-## Project Structure
+<br/>
 
+
+## Configuration
+
+Files in `agri_bot_searcher/`:
+
+| File | Purpose |
+|:-----|:--------|
+| `config.yml` | Main settings |
+| `config/enhanced_rag_config.yaml` | RAG parameters |
+| `.env.example` | Environment template |
+
+<details>
+<summary><strong>Example config.yml</strong></summary>
+
+```yaml
+ollama:
+  base_port: 11434
+  model: gemma3:1b
+
+agents:
+  max_agents: 6
+  roles:
+    - crop_specialist
+    - disease_expert
+    - economics_analyst
+    - climate_researcher
+
+search:
+  agriculture_domains:
+    - extension.org
+    - fao.org
+    - usda.gov
 ```
-AgriIR/
-├── agri_bot_searcher/           # RAG pipeline, Web UI, API, Voice
-├── embedding_generator/         # Document embedding system
-├── organized_database_creation/ # Agentic data curation (32 agents)
-├── install_agriir.sh / start_agriir.sh
-└── requirements.txt
-```
+</details>
 
----
+<br/>
 
-## Models
 
-| Model | VRAM | Use |
-|:------|:----:|:----|
-| `gemma3:1b` | 1.6GB | Query processing |
-| `llama3.2:3b` | 2GB | Default synthesis |
-| `gemma3:27b` | 16GB | High-quality synthesis |
-| `Qwen3-Embedding-8B` | 5GB | Embeddings |
+## Contributing
 
-**Voice:** English, Hindi, Tamil, Telugu, Kannada, Malayalam
+We welcome contributions! Here's how to get started
 
----
+1. **Fork** the repository
+2. **Create a branch:** `git checkout -b feature/your-feature`
+3. **Commit changes:** `git commit -am 'Add your feature'`
+4. **Push to branch:** `git push origin feature/your-feature`
+5. **Open a Pull Request**
 
-## Authors
+> 💡 Please open an issue first to discuss major changes before submitting a PR.
 
-**Shuvam Banerji Seal** (IISER Kolkata) • **Aheli Poddar** (IEM Kolkata) • **Alok Mishra** (IISER Kolkata) • **Dwaipayan Roy** (IISER Kolkata)
-
+<br/>
