@@ -203,3 +203,6 @@ autonomous_indian_agriculture_complete_repaired.jsonl
 # Downloaded embeddings
 embeddings/
 embeddings.zip
+
+# Conference paper (private)
+otome_game/
