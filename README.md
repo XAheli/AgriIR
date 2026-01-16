@@ -6,8 +6,8 @@
 
 [![Paper](https://img.shields.io/badge/ECIR%202026-IR%20for%20Good-blue?style=for-the-badge&logo=springer)](https://ecir2026.eu/calls/call-for-ir-for-good-papers)
 [![Demo](https://img.shields.io/badge/Demo-Watch%20Video-red?style=for-the-badge&logo=youtube)](https://bit.ly/AgriIR)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.10--3.12-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![License](https://img.shields.io/badge/License-Apache2.0-green?style=for-the-badge)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 
 [![Ollama](https://img.shields.io/badge/Ollama-Supported-black?style=flat-square&logo=ollama)](https://ollama.ai)
 [![FAISS](https://img.shields.io/badge/FAISS-Vector%20DB-orange?style=flat-square&logo=meta)](https://github.com/facebookresearch/faiss)
