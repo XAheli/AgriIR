@@ -67,40 +67,9 @@ git clone https://github.com/Shuvam-Banerji-Seal/AgriIR.git && cd AgriIR
 
 <br/>
 
-## System Architecture
+## Database Architecture
 
-```mermaid
-graph TB
-    subgraph Client
-        WEB[Web UI]
-        VOICE[Voice Input]
-    end
 
-    subgraph Server["Flask Server :5000"]
-        API[REST API]
-        RAG[RAG Engine]
-        CIT[Citation Tracker]
-    end
-
-    subgraph Inference["Ollama :11434"]
-        LLM[LLM Models]
-        EMB[Embeddings]
-    end
-
-    subgraph Storage
-        FAISS[(FAISS Index)]
-        DDG[Web Search]
-    end
-
-    WEB --> API
-    VOICE --> API
-    API --> RAG
-    RAG --> LLM
-    RAG --> EMB
-    RAG --> FAISS
-    RAG --> DDG
-    RAG --> CIT
-```
 
 <br/>
 
