@@ -69,9 +69,10 @@ git clone https://github.com/Shuvam-Banerji-Seal/AgriIR.git && cd AgriIR
 
 ## Database Architecture
 
+<div id="header" align="center">
+  <img align="center" width=800px height=400px alt="side_sticker" src="https://github.com/XAheli/AgriIR/blob/main/Images/database_pipeline.png" />
 
-
-<br/>
+</div>
 
 ## Installation
 
