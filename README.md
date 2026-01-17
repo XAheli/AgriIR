@@ -30,20 +30,73 @@ AgriIR is a 6-stage retrieval-augmented generation pipeline for agricultural Q&A
 
 ```mermaid
 graph LR
-    A[Query] --> B[Refine]
-    B --> C[Decompose]
-    C --> D[Retrieve]
-    D --> E[Enhance]
-    E --> F[Synthesize]
-    F --> G[Cite]
-    G --> H[Response]
+    %% Global Styles
+    classDef stage fill:#90caf9,stroke:#01579b,stroke-width:2px,color:#000,font-weight:bold;
+    classDef config fill:#b2ebf2,stroke:#006064,stroke-width:1px,color:#000;
+    classDef storage fill:#fff3e0,stroke:#e65100,stroke-width:2px,stroke-dasharray: 5 5,color:#000,font-weight:bold;
+    classDef external fill:#ef9a9a,stroke:#b71c1c,stroke-width:1px,color:#000;
+    classDef governance fill:#d1c4e9,stroke:#4527a0,stroke-width:1px,color:#000;
+    classDef terminal fill:#e3f2fd,stroke:#01579b,stroke-width:2px,color:#000;
 
-    subgraph "Temperature"
-        B -.-> B1["T=0.1"]
-        C -.-> C1["T=0.5"]
-        F -.-> F1["T=0.2"]
+    %% Entry and Exit
+    Start([User Query]) --> S1
+    S6 --> End([Cited Answer])
+
+    %% Main Pipeline Stages
+    subgraph Pipeline [Core RAG Pipeline]
+        S1[Stage-1<br/>Query Refine<br/>T=0.1]
+        S2[Stage-2<br/>Sub-Query<br/>T=0.5]
+        S3[Stage-3<br/>Parallel Retrieval]
+        S4[Stage-4<br/>Agent Enhance]
+        S5[Stage-5<br/>Synthesis<br/>T=0.2]
+        S6[Stage-6<br/>Citation Insert]
+
+        S1 --> S2
+        S2 --> S3
+        S3 --> S4
+        S4 --> S5
+        S5 --> S6
     end
+
+    %% External Logic & Retrieval
+    subgraph Retrieval_Layer [Knowledge Retrieval]
+        AE[Adaptive Embedding] -.-> VDB
+        VDB[(Vector DB<br/>FAISS<br/>C2)]
+        
+        LLMF[LLM Filtering] -.-> WS
+        WS[(Web Search<br/>Duck Duck Go<br/>C2)]
+    end
+
+    %% Configuration & Governance
+    subgraph Control_Plane [System Configuration]
+        TP[Temperature<br/>Profiles<br/>C1]
+        MR[Model<br/>Registry<br/>C1]
+        AC[Agent<br/>Catalogue<br/>C3]
+        OBS[Observability<br/>C4]
+        DEP[Deployment<br/>C4]
+    end
+
+    %% Connections
+    VDB & WS --> S3
+    
+    %% Config Connections
+    TP -.->|Config| S1 & S2 & S6
+    MR -.->|Config| S1 & S2 & S6
+    AC -.->|Config| S4
+    OBS -.->|Monitor| S5
+    DEP -.->|Govern| S6
+
+    %% Applying Classes
+    class S1,S2,S3,S4,S5,S6 stage;
+    class TP,MR config;
+    class VDB,WS storage;
+    class AE,LLMF external;
+    class AC,OBS,DEP governance;
+    class Start,End terminal;
 ```
+
+
+
 
 | Stage | Operation | Details |
 |:-----:|:----------|:--------|
